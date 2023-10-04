@@ -2,8 +2,10 @@ import { ObjectId } from "mongodb";
 
 import { Router, getExpressRouter } from "./framework/router";
 
-import { Friend, Post, User, WebSession } from "./app";
+import { Friend, Message, Post, Status, User, WebSession } from "./app";
+import { MessageDoc } from "./concepts/message";
 import { PostDoc, PostOptions } from "./concepts/post";
+import { StatusDoc } from "./concepts/status";
 import { UserDoc } from "./concepts/user";
 import { WebSessionDoc } from "./concepts/websession";
 import Responses from "./responses";
@@ -135,6 +137,68 @@ class Routes {
     const user = WebSession.getUser(session);
     const fromId = (await User.getUserByUsername(from))._id;
     return await Friend.rejectRequest(fromId, user);
+  }
+
+  @Router.get("/messages")
+  async getUserMessages(session: WebSessionDoc) {
+    const user = await WebSession.getUser(session);
+    return await Message.getByUser(user);
+  }
+
+  @Router.post("/messages")
+  async sendMessage(session: WebSessionDoc, recipient_usernames: Array<string>, content: string) {
+    const user = WebSession.getUser(session);
+    const recipients: ObjectId[] = [];
+
+    if (typeof recipient_usernames !== "string") {
+      for (const username in recipient_usernames) {
+        recipients.push((await User.getUserByUsername(username))._id);
+      }
+    } else {
+      recipients.push((await User.getUserByUsername(recipient_usernames))._id);
+    }
+
+    return await Message.sendMessage(user, recipients, content);
+  }
+
+  @Router.patch("/messages/:_id")
+  async editMessage(session: WebSessionDoc, _id: ObjectId, update: Partial<MessageDoc>) {
+    const user = WebSession.getUser(session);
+    await Message.isSender(user, _id);
+    return Message.update(_id, update);
+  }
+
+  @Router.delete("/messages/:_id")
+  async deleteMessage(session: WebSessionDoc, _id: ObjectId) {
+    const user = WebSession.getUser(session);
+    await Message.isSender(user, _id);
+    return Message.delete(_id);
+  }
+
+  @Router.get("/status")
+  async getUserStatus(session: WebSessionDoc) {
+    const user = await WebSession.getUser(session);
+    return await Status.getUserStatus(user);
+  }
+
+  @Router.post("/status")
+  async createStatus(session: WebSessionDoc, content: string) {
+    const user = WebSession.getUser(session);
+    return await Status.create(user, content);
+  }
+
+  @Router.patch("/status/:_id")
+  async updateStatus(session: WebSessionDoc, _id: ObjectId, update: Partial<StatusDoc>) {
+    const user = WebSession.getUser(session);
+    await Status.isUser(user, _id);
+    return Status.update(_id, update);
+  }
+
+  @Router.delete("/status/:_id")
+  async removeStatus(session: WebSessionDoc, _id: ObjectId) {
+    const user = WebSession.getUser(session);
+    await Status.isUser(user, _id);
+    return Status.delete(_id);
   }
 }
 
