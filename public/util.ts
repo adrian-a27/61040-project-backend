@@ -77,6 +77,54 @@ const operations: operation[] = [
     method: "DELETE",
     fields: { id: "input" },
   },
+  {
+    name: "Get Messages",
+    endpoint: "/api/messages",
+    method: "GET",
+    fields: {},
+  },
+  {
+    name: "Send Message",
+    endpoint: "/api/messages",
+    method: "POST",
+    fields: { recipient_usernames: "input", content: "input" },
+  },
+  {
+    name: "Update Message",
+    endpoint: "/api/messages/:id",
+    method: "PATCH",
+    fields: { id: "input", update: { content: "input" } },
+  },
+  {
+    name: "Delete Message",
+    endpoint: "/api/messages/:id",
+    method: "DELETE",
+    fields: { id: "input" },
+  },
+  {
+    name: "Get Status",
+    endpoint: "/api/status",
+    method: "GET",
+    fields: {},
+  },
+  {
+    name: "Create Status",
+    endpoint: "/api/status",
+    method: "POST",
+    fields: { content: "input" },
+  },
+  {
+    name: "Update Status",
+    endpoint: "/api/status/:id",
+    method: "PATCH",
+    fields: { id: "input", update: { content: "input" } },
+  },
+  {
+    name: "Delete Status",
+    endpoint: "/api/status/:id",
+    method: "DELETE",
+    fields: { id: "input" },
+  },
 ];
 
 // Do not edit below here.
