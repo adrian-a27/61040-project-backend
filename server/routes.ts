@@ -46,6 +46,18 @@ class Routes {
     return await User.delete(user);
   }
 
+  @Router.get("/users/friends")
+  async getUserFriends(session: WebSessionDoc) {
+    // Will return a list of the current users friends
+    throw new Error("Not Implemented");
+  }
+
+  @Router.get("/users/followers")
+  async getUserFollowers(session: WebSessionDoc) {
+    // Will return a list of the current users followers
+    throw new Error("Not Implemented");
+  }
+
   @Router.post("/login")
   async logIn(session: WebSessionDoc, username: string, password: string) {
     const u = await User.authenticate(username, password);
@@ -73,6 +85,8 @@ class Routes {
 
   @Router.post("/posts")
   async createPost(session: WebSessionDoc, content: string, options?: PostOptions) {
+    // Turn into a synchronization where the new post is added to the data set in FeedConcept
+
     const user = WebSession.getUser(session);
     const created = await Post.create(user, content, options);
     return { msg: created.msg, post: await Responses.post(created.post) };
@@ -87,6 +101,8 @@ class Routes {
 
   @Router.delete("/posts/:_id")
   async deletePost(session: WebSessionDoc, _id: ObjectId) {
+    // Turn into a synchronization where the post is removed from the data set in FeedConcept
+
     const user = WebSession.getUser(session);
     await Post.isAuthor(user, _id);
     return Post.delete(_id);
@@ -199,6 +215,60 @@ class Routes {
     const user = WebSession.getUser(session);
     await Status.isUser(user, _id);
     return Status.delete(_id);
+  }
+
+  @Router.get("/feed")
+  async createFeed(session: WebSessionDoc) {
+    // Will return the id for a newly generated Feed
+    throw new Error("Not Implemented");
+  }
+
+  @Router.patch("/feed")
+  async refreshFeed(session: WebSessionDoc) {
+    // Will refresh user feed and rerun recommendation rule
+    throw new Error("Not Implemented");
+  }
+
+  @Router.get("/feed/next")
+  async getNextInFeed(session: WebSessionDoc) {
+    // Will get next video in user Feed
+    throw new Error("Not Implemented");
+  }
+
+  @Router.patch("/music/play")
+  async startPlayback(session: WebSessionDoc) {
+    // Will set currentSong to first in queue iff current song is null
+    throw new Error("Not Implemented");
+  }
+
+  @Router.patch("/music/pause")
+  async stopPlayback(session: WebSessionDoc) {
+    // Will set currentSong to null
+    throw new Error("Not Implemented");
+  }
+
+  @Router.put("/music/skip")
+  async skipForward(session: WebSessionDoc) {
+    // Will set currentSong to next in queue
+    throw new Error("Not Implemented");
+  }
+
+  @Router.put("/music/back")
+  async skipBackward(session: WebSessionDoc) {
+    // Will set currentSong to the previous in queue
+    throw new Error("Not Implemented");
+  }
+
+  @Router.patch("/music/add/:id")
+  async addToQueue(session: WebSessionDoc, id: string) {
+    // Will add id to the back of the queue
+    throw new Error("Not Implemented");
+  }
+
+  @Router.put("/music/play/:id")
+  async playSong(session: WebSessionDoc, id: string) {
+    // Synchronization: Will set currentSong to id and change status of User
+    throw new Error("Not Implemented");
   }
 }
 
