@@ -9,6 +9,7 @@ export interface UserDoc extends BaseDoc {
 
 export default class UserConcept {
   public readonly users = new DocCollection<UserDoc>("users");
+  // TODO: Add followers
 
   async create(username: string, password: string) {
     await this.canCreate(username, password);
@@ -33,7 +34,7 @@ export default class UserConcept {
   async getUserByUsername(username: string) {
     const user = await this.users.readOne({ username });
     if (user === null) {
-      throw new NotFoundError(`User not found!`);
+      throw new NotFoundError(`User ${username} not found!`);
     }
     return this.sanitizeUser(user);
   }

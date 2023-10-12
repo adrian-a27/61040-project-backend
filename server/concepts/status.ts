@@ -11,7 +11,6 @@ export default class StatusConcept {
   public readonly statuses = new DocCollection<StatusDoc>("statuses");
 
   async create(user: ObjectId, content: string) {
-    // TODO: Delete if already exists
     const _id = await this.statuses.createOne({ user, content });
     return { msg: "Status created!", status: await this.statuses.readOne({ _id }) };
   }
@@ -24,14 +23,14 @@ export default class StatusConcept {
     return await this.statuses.readOne({ user });
   }
 
-  async update(_id: ObjectId, update: Partial<StatusDoc>) {
+  async update(user: ObjectId, update: Partial<StatusDoc>) {
     this.sanitizeUpdate(update);
-    await this.statuses.updateOne({ _id }, update);
+    await this.statuses.updateOne({ user }, update);
     return { msg: "Status successfully updated!" };
   }
 
-  async delete(_id: ObjectId) {
-    await this.statuses.deleteOne({ _id });
+  async delete(user: ObjectId) {
+    await this.statuses.deleteOne({ user });
     return { msg: "Status deleted successfully!" };
   }
 

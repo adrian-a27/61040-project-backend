@@ -1,17 +1,9 @@
-import FriendConcept from "./concepts/friend";
-import PostConcept from "./concepts/post";
-import UserConcept from "./concepts/user";
-import WebSessionConcept from "./concepts/websession";
-
-// App Definition using concepts
-export const WebSession = new WebSessionConcept();
-export const User = new UserConcept();
-export const Post = new PostConcept();
-export const Friend = new FriendConcept();
-import FriendConcept from "./concepts/friend";
+import FeedConcept from "./concepts/feed";
+import FollowGraphConcept from "./concepts/followGraph";
 import MessageConcept from "./concepts/message";
-import PostConcept from "./concepts/post";
-import StatusConcept from "./concepts/status";
+import MusicPlayerConcept from "./concepts/musicPlayer";
+import PostConcept, { PostDoc } from "./concepts/post";
+import StatusConcept, { StatusDoc } from "./concepts/status";
 import UserConcept from "./concepts/user";
 import WebSessionConcept from "./concepts/websession";
 
@@ -19,6 +11,9 @@ import WebSessionConcept from "./concepts/websession";
 export const WebSession = new WebSessionConcept();
 export const User = new UserConcept();
 export const Post = new PostConcept();
-export const Friend = new FriendConcept();
 export const Status = new StatusConcept();
 export const Message = new MessageConcept();
+export const PostFeed = new FeedConcept<PostDoc>(Post.posts);
+export const StatusFeed = new FeedConcept<StatusDoc>(Status.statuses);
+export const MusicPlayer = new MusicPlayerConcept();
+export const FollowGraph = new FollowGraphConcept();

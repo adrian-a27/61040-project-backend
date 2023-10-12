@@ -1,5 +1,6 @@
 import { User } from "./app";
-import { AlreadyFriendsError, FriendNotFoundError, FriendRequestAlreadyExistsError, FriendRequestDoc, FriendRequestNotFoundError } from "./concepts/friend";
+import { FollowRequestDoc } from "./concepts/followGraph";
+import { AlreadyFriendsError, FriendNotFoundError, FriendRequestAlreadyExistsError, FriendRequestNotFoundError } from "./concepts/friend";
 import { PostAuthorNotMatchError, PostDoc } from "./concepts/post";
 import { Router } from "./framework/router";
 
@@ -31,11 +32,12 @@ export default class Responses {
    * Convert FriendRequestDoc into more readable format for the frontend
    * by converting the ids into usernames.
    */
-  static async friendRequests(requests: FriendRequestDoc[]) {
+  static async socialRequests(requests: FollowRequestDoc[]) {
     const from = requests.map((request) => request.from);
     const to = requests.map((request) => request.to);
     const usernames = await User.idsToUsernames(from.concat(to));
-    return requests.map((request, i) => ({ ...request, from: usernames[i], to: usernames[i + requests.length] }));
+    const type = requests.map((request) => request.type);
+    return requests.map((request, i) => ({ ...request, from: usernames[i], to: usernames[i + requests.length], type: type[i] }));
   }
 }
 

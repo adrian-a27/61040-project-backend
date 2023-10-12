@@ -69,13 +69,163 @@ const operations: operation[] = [
     name: "Update Post",
     endpoint: "/api/posts/:id",
     method: "PATCH",
-    fields: { id: "input", update: { content: "input", options: { backgroundColor: "input" } } },
+    fields: { id: "input", update: { content: "input" } },
   },
   {
     name: "Delete Post",
     endpoint: "/api/posts/:id",
     method: "DELETE",
     fields: { id: "input" },
+  },
+  {
+    name: "Get Post Feed",
+    endpoint: "/api/posts/feed",
+    method: "GET",
+    fields: {},
+  },
+  {
+    name: "Get Messages",
+    endpoint: "/api/messages",
+    method: "GET",
+    fields: {},
+  },
+  {
+    name: "Send Message",
+    endpoint: "/api/messages",
+    method: "POST",
+    fields: { recipient_usernames: "json", content: "input" },
+  },
+  {
+    name: "Update Message",
+    endpoint: "/api/messages/:id",
+    method: "PATCH",
+    fields: { id: "input", update: { content: "input" } },
+  },
+  {
+    name: "Delete Message",
+    endpoint: "/api/messages/:id",
+    method: "DELETE",
+    fields: { id: "input" },
+  },
+  {
+    name: "Get Status",
+    endpoint: "/api/status",
+    method: "GET",
+    fields: {},
+  },
+  {
+    name: "Get Status Feed",
+    endpoint: "/api/status/feed",
+    method: "GET",
+    fields: {},
+  },
+  {
+    name: "Send Friend Request",
+    endpoint: "/api/friend/request/:to",
+    method: "POST",
+    fields: { to: "input" },
+  },
+  {
+    name: "Send Follow Request",
+    endpoint: "/api/following/request/:to",
+    method: "POST",
+    fields: { to: "input" },
+  },
+  {
+    name: "Get User Friends",
+    endpoint: "/api/friends",
+    method: "GET",
+    fields: {},
+  },
+  {
+    name: "Get User Followers",
+    endpoint: "/api/followers",
+    method: "GET",
+    fields: {},
+  },
+  {
+    name: "Get User Following",
+    endpoint: "/api/following",
+    method: "GET",
+    fields: {},
+  },
+  {
+    name: "Get Requests",
+    endpoint: "/api/user/requests",
+    method: "GET",
+    fields: {},
+  },
+  {
+    name: "Accept Request",
+    endpoint: "/api/user/requests/accept/:from",
+    method: "POST",
+    fields: { from: "input" },
+  },
+  {
+    name: "Reject Request",
+    endpoint: "/api/user/requests/reject/:from",
+    method: "POST",
+    fields: { from: "input" },
+  },
+  {
+    name: "Remove Friend",
+    endpoint: "/api/friends/:friend",
+    method: "DELETE",
+    fields: { friend: "input" },
+  },
+  {
+    name: "Remove Follower",
+    endpoint: "/api/followers/:follower",
+    method: "DELETE",
+    fields: { follower: "input" },
+  },
+  {
+    name: "Stop Following",
+    endpoint: "/api/following/:followee",
+    method: "DELETE",
+    fields: { followee: "input" },
+  },
+  {
+    name: "Remove Request",
+    endpoint: "/api/user/requests/:to",
+    method: "DELETE",
+    fields: { to: "input" },
+  },
+  {
+    name: "Toggle Playback",
+    endpoint: "/api/music/toggle",
+    method: "PATCH",
+    fields: {},
+  },
+  {
+    name: "Skip Forward",
+    endpoint: "/api/music/next",
+    method: "PATCH",
+    fields: {},
+  },
+  {
+    name: "Skip Backwards",
+    endpoint: "/api/music/back",
+    method: "PATCH",
+    fields: {},
+  },
+  {
+    name: "Get Queue",
+    endpoint: "/api/music/queue",
+    method: "GET",
+    fields: {},
+  },
+  {
+    name: "Add to Queue",
+    endpoint: "/api/music/queue/add/:songId",
+    method: "PATCH",
+    fields: { songId: "input" },
+  },
+  {
+    name: "Play Song",
+    endpoint: "/api/music/play/:songId",
+    method: "PATCH",
+    fields: { songId: "input" },
   },
 ];
 
@@ -189,242 +339,6 @@ async function submitEventHandler(e: Event) {
       reqData[key] = JSON.parse(val as string);
     }
   }
-
-  const data = prefixedRecordIntoObject(reqData as Record<string, string>);
-
-  updateResponse("", "Loading...");
-  const response = await request($method as HttpMethod, endpoint as string, Object.keys(data).length > 0 ? data : undefined);
-  updateResponse(response.$statusCode.toString(), JSON.stringify(response.$response, null, 2));
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-  document.querySelector("#operations-list")!.innerHTML = getHtmlOperations().join("");
-  document.querySelectorAll(".operation-form").forEach((form) => form.addEventListener("submit", submitEventHandler));
-});
-type HttpMethod = "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
-type InputTag = "input" | "textarea";
-type Field = InputTag | { [key: string]: Field };
-type Fields = Record<string, Field>;
-
-type operation = {
-  name: string;
-  endpoint: string;
-  method: HttpMethod;
-  fields: Fields;
-};
-
-const operations: operation[] = [
-  {
-    name: "Get Session User (logged in user)",
-    endpoint: "/api/session",
-    method: "GET",
-    fields: {},
-  },
-  {
-    name: "Create User",
-    endpoint: "/api/users",
-    method: "POST",
-    fields: { username: "input", password: "input" },
-  },
-  {
-    name: "Login",
-    endpoint: "/api/login",
-    method: "POST",
-    fields: { username: "input", password: "input" },
-  },
-  {
-    name: "Logout",
-    endpoint: "/api/logout",
-    method: "POST",
-    fields: {},
-  },
-  {
-    name: "Update User",
-    endpoint: "/api/users",
-    method: "PATCH",
-    fields: { update: { username: "input", password: "input" } },
-  },
-  {
-    name: "Delete User",
-    endpoint: "/api/users",
-    method: "DELETE",
-    fields: {},
-  },
-  {
-    name: "Get Users (empty for all)",
-    endpoint: "/api/users/:username",
-    method: "GET",
-    fields: { username: "input" },
-  },
-  {
-    name: "Get Posts (empty for all)",
-    endpoint: "/api/posts",
-    method: "GET",
-    fields: { author: "input" },
-  },
-  {
-    name: "Create Post",
-    endpoint: "/api/posts",
-    method: "POST",
-    fields: { content: "input" },
-  },
-  {
-    name: "Update Post",
-    endpoint: "/api/posts/:id",
-    method: "PATCH",
-    fields: { id: "input", update: { content: "input", options: { backgroundColor: "input" } } },
-  },
-  {
-    name: "Delete Post",
-    endpoint: "/api/posts/:id",
-    method: "DELETE",
-    fields: { id: "input" },
-  },
-  {
-    name: "Get Messages",
-    endpoint: "/api/messages",
-    method: "GET",
-    fields: {},
-  },
-  {
-    name: "Send Message",
-    endpoint: "/api/messages",
-    method: "POST",
-    fields: { recipient_usernames: "input", content: "input" },
-  },
-  {
-    name: "Update Message",
-    endpoint: "/api/messages/:id",
-    method: "PATCH",
-    fields: { id: "input", update: { content: "input" } },
-  },
-  {
-    name: "Delete Message",
-    endpoint: "/api/messages/:id",
-    method: "DELETE",
-    fields: { id: "input" },
-  },
-  {
-    name: "Get Status",
-    endpoint: "/api/status",
-    method: "GET",
-    fields: {},
-  },
-  {
-    name: "Create Status",
-    endpoint: "/api/status",
-    method: "POST",
-    fields: { content: "input" },
-  },
-  {
-    name: "Update Status",
-    endpoint: "/api/status/:id",
-    method: "PATCH",
-    fields: { id: "input", update: { content: "input" } },
-  },
-  {
-    name: "Delete Status",
-    endpoint: "/api/status/:id",
-    method: "DELETE",
-    fields: { id: "input" },
-  },
-];
-
-// Do not edit below here.
-// If you are interested in how this works, feel free to ask on forum!
-
-function updateResponse(code: string, response: string) {
-  document.querySelector("#status-code")!.innerHTML = code;
-  document.querySelector("#response-text")!.innerHTML = response;
-}
-
-async function request(method: HttpMethod, endpoint: string, params?: unknown) {
-  try {
-    if (method === "GET" && params) {
-      endpoint += "?" + new URLSearchParams(params as Record<string, string>).toString();
-      params = undefined;
-    }
-
-    const res = fetch(endpoint, {
-      method,
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "same-origin",
-      body: params ? JSON.stringify(params) : undefined,
-    });
-
-    return {
-      $statusCode: (await res).status,
-      $response: await (await res).json(),
-    };
-  } catch (e) {
-    console.log(e);
-    return {
-      $statusCode: "???",
-      $response: { error: "Something went wrong, check your console log.", details: e },
-    };
-  }
-}
-
-function fieldsToHtml(fields: Record<string, Field>, indent = 0, prefix = ""): string {
-  return Object.entries(fields)
-    .map(([name, tag]) => {
-      return `
-        <div class="field" style="margin-left: ${indent}px">
-          <label>${name}:
-          ${typeof tag === "string" ? `<${tag} name="${prefix}${name}"></${tag}>` : fieldsToHtml(tag, indent + 10, prefix + name + ".")}
-          </label>
-        </div>`;
-    })
-    .join("");
-}
-
-function getHtmlOperations() {
-  return operations.map((operation) => {
-    return `<li class="operation">
-      <h3>${operation.name}</h3>
-      <form class="operation-form">
-        <input type="hidden" name="$endpoint" value="${operation.endpoint}" />
-        <input type="hidden" name="$method" value="${operation.method}" />
-        ${fieldsToHtml(operation.fields)}
-        <button type="submit">Submit</button>
-      </form>
-    </li>`;
-  });
-}
-
-function prefixedRecordIntoObject(record: Record<string, string>) {
-  const obj: any = {}; // eslint-disable-line
-  for (const [key, value] of Object.entries(record)) {
-    if (!value) {
-      continue;
-    }
-    const keys = key.split(".");
-    const lastKey = keys.pop()!;
-    let currentObj = obj;
-    for (const key of keys) {
-      if (!currentObj[key]) {
-        currentObj[key] = {};
-      }
-      currentObj = currentObj[key];
-    }
-    currentObj[lastKey] = value;
-  }
-  return obj;
-}
-
-async function submitEventHandler(e: Event) {
-  e.preventDefault();
-  const form = e.target as HTMLFormElement;
-  const { $method, $endpoint, ...reqData } = Object.fromEntries(new FormData(form));
-
-  // Replace :param with the actual value.
-  const endpoint = ($endpoint as string).replace(/:(\w+)/g, (_, key) => {
-    const param = reqData[key] as string;
-    delete reqData[key];
-    return param;
-  });
 
   const data = prefixedRecordIntoObject(reqData as Record<string, string>);
 
