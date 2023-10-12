@@ -7,17 +7,10 @@
     "source.fixAll": true,
     "source.organizeImports": true
   },
-  "typescript.preferences.importModuleSpecifier": "project-relative"
-}
-{
-  "[typescript]": {
-    "editor.formatOnSave": true,
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "editor.codeActionsOnSave": {
-    "source.fixAll": true,
-    "source.organizeImports": true
-  },
   "typescript.preferences.importModuleSpecifier": "project-relative",
-  "editor.tabSize": 2
+  "editor.tabSize": 2,
+  "cSpell.words": [
+    "followee",
+    "websession"
+  ]
 }
